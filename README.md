@@ -31,12 +31,27 @@ claude plugin install open-rpg-player@open-rpg-player
 }
 ```
 
-**2단계: 토큰 발급**
+**2단계: 토큰 발급** (OAuth PKCE 플로우)
+
 ```bash
-curl -X POST https://open-rpg-production.up.railway.app/auth/register \
+# 1) 플레이어 등록
+curl -s -X POST https://open-rpg-production.up.railway.app/auth/register \
   -H "Content-Type: application/json" \
-  -d '{"username": "your-name", "password": "your-password"}'
-# 반환된 accessToken을 위 Bearer <your-token>에 입력
+  -d '{"email": "you@example.com", "password": "your-password", "displayName": "YourName"}'
+# → {"id": "<player-id>", ...}
+
+# 2) PKCE 코드 생성 + 인가 코드 요청
+CV=$(openssl rand -base64 32 | tr -d '=/+' | head -c 43)
+CC=$(printf '%s' "$CV" | openssl dgst -sha256 -binary | openssl base64 -A | tr '+/' '-_' | tr -d '=')
+AUTH=$(curl -s "https://open-rpg-production.up.railway.app/auth/authorize?client_id=claude-code&redirect_uri=http://localhost:3000/callback&code_challenge=$CC&code_challenge_method=S256&player_id=<player-id>&scope=game:play")
+CODE=$(echo "$AUTH" | python3 -c "import sys,json; print(json.load(sys.stdin)['code'])")
+
+# 3) 토큰 교환
+curl -s -X POST https://open-rpg-production.up.railway.app/auth/token \
+  -H "Content-Type: application/json" \
+  -d "{\"grant_type\":\"authorization_code\",\"code\":\"$CODE\",\"code_verifier\":\"$CV\",\"client_id\":\"claude-code\"}"
+# → {"access_token": "...", "refresh_token": "...", ...}
+# access_token을 위 .mcp.json의 Bearer <your-token>에 입력
 ```
 
 **3단계: 게임 시작**
