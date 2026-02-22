@@ -32,7 +32,9 @@ get_available_actions → 가능한 행동 목록 확인
 아래 의사결정 프레임워크를 적용해 최적 행동 선택.
 
 ### 4단계: 행동 (툴 1-3회)
-선택한 행동 실행. 전투 시: `initiate_combat` → `combat_action` 루프.
+선택한 행동 실행.
+- **비전투**: `make_choice`가 핵심 인터페이스 — 이동, 상점 구매, 퀘스트 등 모두 `make_choice`로 처리
+- **전투**: `initiate_combat` → `combat_action` 루프
 
 ### 5단계: 서사 (툴 없음)
 아래 턴 보고 형식으로 결과 출력.
@@ -50,7 +52,7 @@ get_available_actions → 가능한 행동 목록 확인
 | > 70% | **공격** | 새 타일 탐험, 전투 적극 수락 |
 
 ### 자원 규칙
-- **골드 > 200**: `visit_shop` → 장비 업그레이드 고려
+- **골드 > 200**: `visit_shop`으로 목록 확인 → `make_choice`로 구매
 - **골드 < 50**: 전투/퀘스트 수익 우선, 구매 자제
 - **인벤토리 여유**: 아이템 수집 전 `use_item`으로 소모품 정리
 
@@ -109,24 +111,39 @@ get_available_actions → 가능한 행동 목록 확인
 
 ## 핵심 MCP 툴 참조
 
+### 탐험 (매 턴 기본)
 | 툴 | 사용 시점 |
 |----|----------|
-| `get_my_character` | 매 턴 시작 |
+| `get_my_character` | 매 턴 시작 — HP, 골드, 위치 확인 |
 | `get_current_tile` | 위치 컨텍스트 필요 시 |
-| `get_available_actions` | 선택지 확인 |
-| `make_choice` | 비전투 행동 |
-| `initiate_combat` | 전투 시작 |
-| `combat_action` | 전투 라운드 |
-| `get_skill_tree` | 전투 전 스킬 확인 |
-| `use_skill` | 전투/탐험 중 |
-| `get_inventory` | 아이템 확인 |
-| `use_item` | 소모품 사용 |
-| `visit_shop` | 골드 > 150 시 |
-| `get_active_quests` | 퀘스트 상태 확인 |
-| `get_all_factions` | 팩션 전략 수립 |
+| `get_available_actions` | 선택지 목록 확인 |
+| `make_choice` | **모든 비전투 행동의 핵심** — 이동, 상점 구매, 퀘스트 등 |
+| `get_nearby_agents` | 주변 NPC/적 파악 |
 | `get_world_time` | 시간대 효과 확인 |
 | `check_rift` | 리프트 탐험 판단 |
-| `start_simulation` | N턴 자동 실행 |
+| `get_active_quests` | 퀘스트 상태 확인 |
+| `visit_shop` | 상점 목록 조회 (구매는 `make_choice`로) |
+
+### 전투
+| 툴 | 사용 시점 |
+|----|----------|
+| `initiate_combat` | 전투 시작 |
+| `combat_action` | 전투 라운드 실행 |
+| `get_combat_state` | 전투 상태 확인 |
+| `get_skill_tree` | 사용 가능한 스킬 확인 |
+| `use_skill` | 스킬 사용 |
+| `get_status_effects` | 상태이상 확인 |
+| `get_monster_info` | 적 정보 파악 |
+
+### 성장
+| 툴 | 사용 시점 |
+|----|----------|
+| `get_inventory` | 아이템 확인 |
+| `use_item` | 소모품 사용 |
+| `equip_item` | 장비 착용 |
+| `get_subclass_options` | 레벨업 후 서브클래스 선택 |
+| `trigger_evolution` | 영혼 특성 진화 |
+| `get_all_factions` | 팩션 전략 수립 |
 
 ---
 
