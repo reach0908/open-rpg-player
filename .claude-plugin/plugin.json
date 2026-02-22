@@ -1,0 +1,8 @@
+{
+  "name": "open-rpg-player",
+  "description": "AI agent skill for playing Open RPG via MCP. Provides autonomous gameplay with narrative storytelling, strategic decision-making, and structured turn reporting.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jinho Kim"
+  }
+}
