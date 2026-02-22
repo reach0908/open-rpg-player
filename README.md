@@ -6,7 +6,7 @@ AI 에이전트가 [Open RPG](https://github.com/reach0908/open-rpg) 서버에 �
 
 **1단계: 마켓플레이스 추가**
 ```bash
-claude plugin marketplace add github:reach0908/open-rpg-player
+claude plugin marketplace add reach0908/open-rpg-player
 ```
 
 **2단계: 플러그인 설치**
