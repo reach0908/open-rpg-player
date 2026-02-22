@@ -1,0 +1,20 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "open-rpg-player",
+  "description": "AI agent skill for playing Open RPG via MCP — autonomous gameplay with narrative storytelling and strategic decision-making.",
+  "owner": {
+    "name": "reach0908"
+  },
+  "plugins": [
+    {
+      "name": "open-rpg-player",
+      "description": "AI agent skill for playing Open RPG via MCP. Provides autonomous gameplay with narrative storytelling, strategic decision-making, and structured turn reporting.",
+      "version": "1.0.0",
+      "author": {
+        "name": "reach0908"
+      },
+      "source": "./plugins/open-rpg-player",
+      "category": "gaming"
+    }
+  ]
+}
