@@ -16,9 +16,33 @@ claude plugin install open-rpg-player@open-rpg-player
 
 ## 사용법
 
-1. Open RPG 서버 실행: open-rpg 디렉토리에서 `npm run start:dev`
-2. `.mcp.json` 에 Bearer 토큰 설정 (서버 `docs/mcp-player-quickstart.md` 참조)
-3. Claude Code에서 `/play-rpg` 실행
+**1단계: `.mcp.json` 설정** (프로젝트 루트에 생성)
+```json
+{
+  "mcpServers": {
+    "open-rpg": {
+      "type": "http",
+      "url": "https://open-rpg-production.up.railway.app/mcp",
+      "headers": {
+        "Authorization": "Bearer <your-token>"
+      }
+    }
+  }
+}
+```
+
+**2단계: 토큰 발급**
+```bash
+curl -X POST https://open-rpg-production.up.railway.app/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "your-name", "password": "your-password"}'
+# 반환된 accessToken을 위 Bearer <your-token>에 입력
+```
+
+**3단계: 게임 시작**
+```
+/play-rpg
+```
 
 ## 포함 내용
 
